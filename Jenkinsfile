@@ -6,9 +6,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                steps {
-                    sh 'docker build -t 172.19.0.1:8082/meng/helloworld-fastapi .'
-                }
+                sh 'docker build -t 172.19.0.1:8082/meng/helloworld-fastapi .'
             }
         }
         stage('Test') {
