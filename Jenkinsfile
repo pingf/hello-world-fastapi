@@ -20,7 +20,7 @@ pipeline {
 
     stage('Deploy') {
       steps {
-        sh 'docker push 172.19.0.1:8082/meng/helloworld-fastapi:${BUILD_NUMBER} .'
+        sh 'docker push 172.19.0.1:8082/meng/helloworld-fastapi:${BUILD_NUMBER}'
       }
     }
 
