@@ -7,8 +7,19 @@ pipeline {
   }
   stages {
     stage('Build') {
-      steps {
-        sh 'docker build -t 172.19.0.1:8082/meng/helloworld-fastapi:${BUILD_NUMBER} .'
+      parallel {
+        stage('Build') {
+          steps {
+            sh 'docker build -t 172.19.0.1:8082/meng/helloworld-fastapi:${BUILD_NUMBER} .'
+          }
+        }
+
+        stage('test') {
+          steps {
+            sh 'docker run --rm 172.19.0.1:8082/meng/helloworld-fastapi:${BUILD_NUMBER} sleep 1'
+          }
+        }
+
       }
     }
 
