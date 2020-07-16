@@ -7,6 +7,9 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
+                steps {
+                    sh 'docker build -t 172.19.0.1:8082/meng/helloworld-fastapi .'
+                }
             }
         }
         stage('Test') {
