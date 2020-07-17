@@ -1,7 +1,7 @@
 pipeline {
   environment {
     registry = "172.19.0.1:8082/meng/helloworld-fastapi"
-    registryCred = "admin/hello"
+    registryCred = "DOCKER_CRED"
   }
   agent any
   stages {
