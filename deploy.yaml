@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: demo
-        image: 172.19.0.1:8082/meng/helloworld-fastapi:52
+        image: 172.19.0.1:8082/meng/helloworld-fastapi:${version}
         ports:
         - containerPort: 8000
