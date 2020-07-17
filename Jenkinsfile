@@ -1,9 +1,4 @@
 pipeline {
-  environment {
-    registry = "172.19.0.1:8082"
-    registryImage = "172.19.0.1:8082/meng/helloworld-fastapi"
-    registryCred = "DOCKER_CRED"
-  }
   agent any
   stages {
     stage('Cloning Git') {
@@ -11,21 +6,31 @@ pipeline {
         git 'https://github.com/pingf/hello-world-fastapi.git'
       }
     }
+
     stage('Building image') {
-      steps{
+      steps {
         script {
           docker.build registryImage + ":$BUILD_NUMBER"
         }
+
       }
     }
+
     stage('Deploy Image') {
-      steps{
+      steps {
         script {
           docker.withRegistry(registry, registryCred) {
             dockerImage.push()
           }
         }
+
       }
     }
+
+  }
+  environment {
+    registry = 'http://172.19.0.1:8082'
+    registryImage = '172.19.0.1:8082/meng/helloworld-fastapi'
+    registryCred = 'DOCKER_CRED'
   }
 }
