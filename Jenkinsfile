@@ -29,7 +29,16 @@ pipeline {
     stage('Deploy') {
       steps {
         input "Deploy to prod?"
-        sh "echo 'hello'"
+        script {
+          withKubeConfig([
+            credentialsId: 'MYKUBE', 
+            serverUrl: 'https://172.19.0.41:6443',
+            namespace: 'twwork'
+            ]) {
+            sh 'kubectl apply -f deploy.yaml'
+          }
+
+        }
       }
     }
 
