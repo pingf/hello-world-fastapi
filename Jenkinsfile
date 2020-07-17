@@ -1,8 +1,8 @@
 pipeline {
   environment {
     registry = "172.19.0.1:8082/meng/helloworld-fastapi"
-    registryUser = ‘admin’
-    registryPassword = ‘hello’
+    registryUser = "admin"
+    registryPassword = "hello"
   }
   agent any
   stages {
