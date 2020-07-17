@@ -37,6 +37,7 @@ pipeline {
             namespace: 'twwork'
           ]) {
             sh 'cat deploy.yaml  | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/" >> twdeploy.yaml'
+            sh 'cat twdeploy.yaml'
             sh 'kubectl apply -f twdeploy.yaml'
           }
         }
