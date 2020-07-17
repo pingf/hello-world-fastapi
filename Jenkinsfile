@@ -1,8 +1,7 @@
 pipeline {
   environment {
     registry = "172.19.0.1:8082/meng/helloworld-fastapi"
-    registryUser = "admin"
-    registryPassword = "hello"
+    registryCred = "admin/hello"
   }
   agent any
   stages {
@@ -21,7 +20,7 @@ pipeline {
     stage('Deploy Image') {
       steps{
         script {
-          docker.withRegistry( registryUser, registryPassword ) {
+          docker.withRegistry(registry, registryCred) {
             dockerImage.push()
           }
         }
