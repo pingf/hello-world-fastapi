@@ -1,7 +1,7 @@
 pipeline {
   environment {
     registry = "172.19.0.1:8082"
-    image = "172.19.0.1:8082/meng/helloworld-fastapi"
+    registryImage = "172.19.0.1:8082/meng/helloworld-fastapi"
     registryCred = "DOCKER_CRED"
   }
   agent any
@@ -14,7 +14,7 @@ pipeline {
     stage('Building image') {
       steps{
         script {
-          docker.build image + ":$BUILD_NUMBER"
+          docker.build registryImage + ":$BUILD_NUMBER"
         }
       }
     }
