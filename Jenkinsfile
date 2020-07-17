@@ -10,7 +10,7 @@ pipeline {
     stage('Building image') {
       steps {
         script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+          dockerImage = docker.build registry + "/" + imageName + ":$BUILD_NUMBER"
         }
 
       }
@@ -19,7 +19,7 @@ pipeline {
     stage('Deploy Image') {
       steps {
         script {
-          docker.withRegistry('http://172.19.0.1:8082', registryCred) {
+          docker.withRegistry("http://" + registry, registryCred) {
             dockerImage.push()
           }
         }
@@ -29,7 +29,8 @@ pipeline {
 
   }
   environment {
-    registry = 'meng/helloworld-fastapi'
+    registry = '172.19.0.1:8082'
+    imageName = 'meng/helloworld-fastapi'
     registryCred = 'DOCKER_CRED'
   }
 }
