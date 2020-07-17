@@ -16,14 +16,20 @@ pipeline {
       }
     }
 
-    stage('Deploy Image') {
+    stage('Publishing Image') {
       steps {
         script {
           docker.withRegistry("http://" + registry, registryCred) {
             dockerImage.push()
           }
         }
+      }
+    }
 
+    stage('Deploy') {
+      steps {
+        input "Deploy to prod?"
+        sh "echo 'hello'"
       }
     }
 
