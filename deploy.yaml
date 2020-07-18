@@ -1,22 +1,38 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: demo
+  name: {name}
   labels:
-    app: demo
+    app: {name}
   namespace: ${namespace}
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: demo
+      app: {name}
   template:
     metadata:
       labels:
-        app: demo
+        app: {name}
     spec:
       containers:
-      - name: demo
+      - name: {name}
         image: ${registry}/meng/helloworld-fastapi:${version}
         ports:
         - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {name}
+  namespace: {namespace}
+spec:
+  ports:
+  - name: http
+    nodePort: {port}
+    port: 8000
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: {name}
+  type: NodePort

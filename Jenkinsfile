@@ -92,7 +92,7 @@ pipeline {
                 serverUrl: 'https://172.19.0.41:6443',
                 namespace: 'twwork'
               ]) {
-                sh 'cat deploy.yaml  | sed -e "s/\\\${namespace}/'+namespace+'/" | sed -e "s/\\\${registry}/'+registry+'/" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/" >> twdeploy.yaml'
+                sh 'cat deploy.yaml  | sed -e "s/\\\${name}/'+name+'/" | sed -e "s/\\\${port}/'+port+'/" | sed -e "s/\\\${namespace}/'+namespace+'/" | sed -e "s/\\\${registry}/'+registry+'/" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/" >> twdeploy.yaml'
                 sh 'cat twdeploy.yaml'
                 sh 'kubectl apply -f twdeploy.yaml'
               }
@@ -108,7 +108,7 @@ pipeline {
                 serverUrl: 'https://172.19.0.41:6443',
                 namespace: 'twwork'
               ]) {
-                sh 'cat deploy.yaml  | sed -e "s/\\\${namespace}/'+namespaceTest+'/" | sed -e "s/\\\${registry}/'+registryTest+'/" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/" >> twdeploy-test.yaml'
+                sh 'cat deploy.yaml  | sed -e "s/\\\${name}/'+nameTest+'/" | sed -e "s/\\\${port}/'+portTest+'/" | sed -e "s/\\\${namespace}/'+namespace+'/" | sed -e "s/\\\${registry}/'+registry+'/" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/" >> twdeploy.yaml'
                 sh 'cat twdeploy-test.yaml'
                 sh 'kubectl apply -f twdeploy-test.yaml'
               }
@@ -124,7 +124,7 @@ pipeline {
                 serverUrl: 'https://172.19.0.41:6443',
                 namespace: 'twwork'
               ]) {
-                sh 'cat deploy.yaml  | sed -e "s/\\\${namespace}/'+namespaceProd+'/" | sed -e "s/\\\${registry}/'+registryProd+'/" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/" >> twdeploy-prod.yaml'
+                sh 'cat deploy.yaml  | sed -e "s/\\\${name}/'+nameProd+'/" | sed -e "s/\\\${port}/'+portProd+'/" | sed -e "s/\\\${namespace}/'+namespace+'/" | sed -e "s/\\\${registry}/'+registry+'/" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/" >> twdeploy.yaml'
                 sh 'cat twdeploy-prod.yaml'
                 sh 'kubectl apply -f twdeploy-prod.yaml'
               }
@@ -143,5 +143,11 @@ pipeline {
     namespace = 'default'
     namespaceTest = 'twtest'
     namespaceProd = 'twprod'
+    name = 'demo'
+    nameTest = 'demo-test'
+    nameProd = 'demo-prod'
+    port = '30081'
+    portTest = '30082'
+    portProd = '30083'
   }
 }
