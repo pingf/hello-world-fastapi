@@ -38,9 +38,10 @@ pipeline {
           }
         }
 
-        stage('publish to test env registry') {
+        stage('publish to test registry') {
           steps {
             script {
+              input 'publish to test registry?'
               docker.withRegistry("http://" + registryTest, registryCred) {
                 dockerImage.push()
               }
@@ -52,6 +53,7 @@ pipeline {
         stage('publish to prod registry') {
           steps {
             script {
+              input 'publish to prod registry?'
               docker.withRegistry("http://" + registryProd, registryCred) {
                 dockerImage.push()
               }
@@ -93,9 +95,9 @@ pipeline {
   }
   environment {
     registry = '172.19.0.1:8082'
-    imageName = 'meng/helloworld-fastapi'
-    registryCred = 'DOCKER_CRED'
     registryTest = '172.19.0.1:8084'
     registryProd = '172.19.0.1:8086'
+    imageName = 'meng/helloworld-fastapi'
+    registryCred = 'DOCKER_CRED'
   }
 }
