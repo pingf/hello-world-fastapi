@@ -19,7 +19,7 @@ pipeline {
     stage('Run Test in Docker') {
       steps {
         script {
-          sh "docker run --rm " + registry + "/" + imageName + ":$BUILD_NUMBER pytest -v"
+          sh "docker run --rm " + imageName + ":$BUILD_NUMBER pytest -v"
         }
 
       }
@@ -38,7 +38,7 @@ pipeline {
           }
         }
 
-        stage('') {
+        stage('error') {
           steps {
             script {
               docker.withRegistry("http://" + registryTest, registryCred) {
