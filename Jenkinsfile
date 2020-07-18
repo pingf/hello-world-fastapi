@@ -16,10 +16,19 @@ pipeline {
       }
     }
 
-    stage('Run Test in Docker') {
+    stage('Run Test') {
       steps {
         script {
           sh "docker run --rm " + imageName + ":$BUILD_NUMBER pytest -v"
+        }
+
+      }
+    }
+
+    stage('Run Flake') {
+      steps {
+        script {
+          sh "flake8 main.py"
         }
 
       }
