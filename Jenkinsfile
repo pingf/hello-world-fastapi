@@ -82,7 +82,6 @@ pipeline {
     }
 
     stage('Deploy') {
-
       parallel {
         stage('deploy to dev') {
           steps {
@@ -92,13 +91,15 @@ pipeline {
                 serverUrl: 'https://172.19.0.41:6443',
                 namespace: 'twwork'
               ]) {
-                sh 'cat deploy.yaml  | sed -e "s/\\\${name}/'+name+'/g" | sed -e "s/\\\${port}/'+port+'/g" | sed -e "s/\\\${namespace}/'+namespace+'/g" | sed -e "s/\\\${registry}/'+registry+'/g" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/g" >> twdeploy.yaml'
+                sh 'cat deploy.yaml  | sed -e "s/\\\${name}/'+"$name"+'/g" | sed -e "s/\\\${port}/'+port+'/g" | sed -e "s/\\\${namespace}/'+namespace+'/g" | sed -e "s/\\\${registry}/'+registry+'/g" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/g" >> twdeploy.yaml'
                 sh 'cat twdeploy.yaml'
                 sh 'kubectl apply -f twdeploy.yaml'
               }
             }
+
           }
         }
+
         stage('deploy to test') {
           steps {
             input 'Deploy to test?'
@@ -113,8 +114,10 @@ pipeline {
                 sh 'kubectl apply -f twdeploy-test.yaml'
               }
             }
+
           }
         }
+
         stage('deploy to prod') {
           steps {
             input 'Deploy to prod?'
@@ -129,10 +132,13 @@ pipeline {
                 sh 'kubectl apply -f twdeploy-prod.yaml'
               }
             }
+
           }
         }
+
       }
     }
+
   }
   environment {
     registry = '172.19.0.1:8082'
