@@ -106,6 +106,22 @@ pipeline {
             }
           }
         }
+        stage('deploy to prod') {
+          steps {
+            input 'Deploy to prod?'
+            script {
+              withKubeConfig([
+                credentialsId: 'MYKUBE',
+                serverUrl: 'https://172.19.0.41:6443',
+                namespace: 'twwork'
+              ]) {
+                sh 'cat deploy.yaml  | sed -e "s/\\\${namespace}/'+namespaceProd+'/" | sed -e "s/\\\${registry}/'+registryProd+'/" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/" >> twdeploy-prod.yaml'
+                sh 'cat twdeploy-prod.yaml'
+                sh 'kubectl apply -f twdeploy-prod.yaml'
+              }
+            }
+          }
+        }
       }
     }
   }
