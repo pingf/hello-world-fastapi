@@ -10,8 +10,9 @@ pipeline {
     stage('Building image') {
       steps {
         script {
-          dockerImage = docker.build registry + "/" + imageName + ":$BUILD_NUMBER"
+          dockerImage = docker.build imageName + ":$BUILD_NUMBER"
         }
+
       }
     }
 
@@ -20,16 +21,34 @@ pipeline {
         script {
           sh "docker run --rm " + registry + "/" + imageName + ":$BUILD_NUMBER pytest -v"
         }
+
       }
     }
 
     stage('Publishing Image') {
-      steps {
-        script {
-          docker.withRegistry("http://" + registry, registryCred) {
-            dockerImage.push()
+      parallel {
+        stage('Publishing Image') {
+          steps {
+            script {
+              docker.withRegistry("http://" + registry, registryCred) {
+                dockerImage.push()
+              }
+            }
+
           }
         }
+
+        stage('') {
+          steps {
+            script {
+              docker.withRegistry("http://" + registryTest, registryCred) {
+                dockerImage.push()
+              }
+            }
+
+          }
+        }
+
       }
     }
 
@@ -38,6 +57,7 @@ pipeline {
         script {
           sh "docker rmi " + registry + "/" + imageName + ":$BUILD_NUMBER"
         }
+
       }
     }
 
@@ -64,5 +84,7 @@ pipeline {
     registry = '172.19.0.1:8082'
     imageName = 'meng/helloworld-fastapi'
     registryCred = 'DOCKER_CRED'
+    registryTest = '172.19.0.1:8084'
+    registryProd = '172.19.0.1:8086'
   }
 }
