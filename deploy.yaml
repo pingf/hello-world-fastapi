@@ -4,6 +4,7 @@ metadata:
   name: demo
   labels:
     app: demo
+  namespace: ${namespace}
 spec:
   replicas: 3
   selector:
@@ -16,6 +17,6 @@ spec:
     spec:
       containers:
       - name: demo
-        image: 172.19.0.1:8082/meng/helloworld-fastapi:${version}
+        image: ${registry}/meng/helloworld-fastapi:${version}
         ports:
         - containerPort: 8000

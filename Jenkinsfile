@@ -41,7 +41,6 @@ pipeline {
         stage('publish to test registry') {
           steps {
             script {
-              input 'publish to test registry?'
               docker.withRegistry("http://" + registryTest, registryCred) {
                 dockerImage.push()
               }
@@ -53,7 +52,6 @@ pipeline {
         stage('publish to prod registry') {
           steps {
             script {
-              input 'publish to prod registry?'
               docker.withRegistry("http://" + registryProd, registryCred) {
                 dockerImage.push()
               }
@@ -75,23 +73,41 @@ pipeline {
     }
 
     stage('Deploy') {
-      steps {
-        input 'Deploy to prod?'
-        script {
-          withKubeConfig([
-            credentialsId: 'MYKUBE',
-            serverUrl: 'https://172.19.0.41:6443',
-            namespace: 'twwork'
-          ]) {
-            sh 'cat deploy.yaml  | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/" >> twdeploy.yaml'
-            sh 'cat twdeploy.yaml'
-            sh 'kubectl apply -f twdeploy.yaml'
+
+      parallel {
+        stage('deploy to dev') {
+          steps {
+            script {
+              withKubeConfig([
+                credentialsId: 'MYKUBE',
+                serverUrl: 'https://172.19.0.41:6443',
+                namespace: 'twwork'
+              ]) {
+                sh 'cat deploy.yaml  | sed -e "s/\\\${namespace}/'+namespace+'/" | sed -e "s/\\\${registry}/'+registry+'/" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/" >> twdeploy.yaml'
+                sh 'cat twdeploy.yaml'
+                sh 'kubectl apply -f twdeploy.yaml'
+              }
+            }
           }
         }
-
+        stage('deploy to test') {
+          steps {
+            input 'Deploy to test?'
+            script {
+              withKubeConfig([
+                credentialsId: 'MYKUBE',
+                serverUrl: 'https://172.19.0.41:6443',
+                namespace: 'twwork'
+              ]) {
+                sh 'cat deploy.yaml  | sed -e "s/\\\${namespace}/'+namespaceTest+'/" | sed -e "s/\\\${registry}/'+registryTest+'/" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/" >> twdeploy.yaml'
+                sh 'cat twdeploy.yaml'
+                sh 'kubectl apply -f twdeploy.yaml'
+              }
+            }
+          }
+        }
       }
     }
-
   }
   environment {
     registry = '172.19.0.1:8082'
@@ -99,5 +115,8 @@ pipeline {
     registryProd = '172.19.0.1:8086'
     imageName = 'meng/helloworld-fastapi'
     registryCred = 'DOCKER_CRED'
+    namespace = 'default'
+    namespaceTest = 'twtest'
+    namespaceProd = 'twprod'
   }
 }
