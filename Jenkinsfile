@@ -92,7 +92,7 @@ pipeline {
                 serverUrl: 'https://172.19.0.41:6443',
                 namespace: 'twwork'
               ]) {
-                sh 'cat deploy.yaml  | sed -e "s/\\\${name}/'+name+'/" | sed -e "s/\\\${port}/'+port+'/" | sed -e "s/\\\${namespace}/'+namespace+'/" | sed -e "s/\\\${registry}/'+registry+'/" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/" >> twdeploy.yaml'
+                sh 'cat deploy.yaml  | sed -e "s/\\\${name}/'+name+'/g" | sed -e "s/\\\${port}/'+port+'/g" | sed -e "s/\\\${namespace}/'+namespace+'/g" | sed -e "s/\\\${registry}/'+registry+'/g" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/g" >> twdeploy.yaml'
                 sh 'cat twdeploy.yaml'
                 sh 'kubectl apply -f twdeploy.yaml'
               }
@@ -108,7 +108,7 @@ pipeline {
                 serverUrl: 'https://172.19.0.41:6443',
                 namespace: 'twwork'
               ]) {
-                sh 'cat deploy.yaml  | sed -e "s/\\\${name}/'+nameTest+'/" | sed -e "s/\\\${port}/'+portTest+'/" | sed -e "s/\\\${namespace}/'+namespace+'/" | sed -e "s/\\\${registry}/'+registry+'/" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/" >> twdeploy.yaml'
+                sh 'cat deploy.yaml  | sed -e "s/\\\${name}/'+nameTest+'/g" | sed -e "s/\\\${port}/'+portTest+'/g" | sed -e "s/\\\${namespace}/'+namespace+'/g" | sed -e "s/\\\${registry}/'+registry+'/g" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/g" >> twdeploy-test.yaml'
                 sh 'cat twdeploy-test.yaml'
                 sh 'kubectl apply -f twdeploy-test.yaml'
               }
@@ -124,7 +124,7 @@ pipeline {
                 serverUrl: 'https://172.19.0.41:6443',
                 namespace: 'twwork'
               ]) {
-                sh 'cat deploy.yaml  | sed -e "s/\\\${name}/'+nameProd+'/" | sed -e "s/\\\${port}/'+portProd+'/" | sed -e "s/\\\${namespace}/'+namespace+'/" | sed -e "s/\\\${registry}/'+registry+'/" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/" >> twdeploy.yaml'
+                sh 'cat deploy.yaml  | sed -e "s/\\\${name}/'+nameProd+'/g" | sed -e "s/\\\${port}/'+portProd+'/g" | sed -e "s/\\\${namespace}/'+namespace+'/g" | sed -e "s/\\\${registry}/'+registry+'/g" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/g" >> twdeploy-prod.yaml'
                 sh 'cat twdeploy-prod.yaml'
                 sh 'kubectl apply -f twdeploy-prod.yaml'
               }
