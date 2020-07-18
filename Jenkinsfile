@@ -99,9 +99,9 @@ pipeline {
                 serverUrl: 'https://172.19.0.41:6443',
                 namespace: 'twwork'
               ]) {
-                sh 'cat deploy.yaml  | sed -e "s/\\\${namespace}/'+namespaceTest+'/" | sed -e "s/\\\${registry}/'+registryTest+'/" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/" >> twdeploy.yaml'
-                sh 'cat twdeploy.yaml'
-                sh 'kubectl apply -f twdeploy.yaml'
+                sh 'cat deploy.yaml  | sed -e "s/\\\${namespace}/'+namespaceTest+'/" | sed -e "s/\\\${registry}/'+registryTest+'/" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/" >> twdeploy-test.yaml'
+                sh 'cat twdeploy-test.yaml'
+                sh 'kubectl apply -f twdeploy-test.yaml'
               }
             }
           }
