@@ -28,7 +28,7 @@ pipeline {
     stage('Run Flake') {
       steps {
         script {
-          sh "flake8 main.py"
+          sh "docker run --rm " + imageName + ":$BUILD_NUMBER flake8 main.py"
         }
 
       }
