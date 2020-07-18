@@ -38,10 +38,21 @@ pipeline {
           }
         }
 
-        stage('error') {
+        stage('publish to test env registry') {
           steps {
             script {
               docker.withRegistry("http://" + registryTest, registryCred) {
+                dockerImage.push()
+              }
+            }
+
+          }
+        }
+
+        stage('publish to prod registry') {
+          steps {
+            script {
+              docker.withRegistry("http://" + registryProd, registryCred) {
                 dockerImage.push()
               }
             }
