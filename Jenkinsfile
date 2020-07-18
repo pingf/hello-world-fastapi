@@ -91,7 +91,7 @@ pipeline {
                 serverUrl: 'https://172.19.0.41:6443',
                 namespace: 'twwork'
               ]) {
-                sh 'cat deploy.yaml  | sed -e "s/\\\${name}/'+nameDev+'/g" | sed -e "s/\\\${port}/'+portDev+'/g" | sed -e "s/\\\${namespace}/'+namespace+'/g" | sed -e "s/\\\${registry}/'+registry+'/g" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/g" >> twdeploy.yaml'
+                sh 'cat deploy.yaml  | sed -e "s/\\\${name}/'+name+'/g" | sed -e "s/\\\${port}/'+port+'/g" | sed -e "s/\\\${namespace}/'+namespace+'/g" | sed -e "s/\\\${registry}/'+registry+'/g" | sed -e "s/\\\${version}/'+"$BUILD_NUMBER"+'/g" >> twdeploy.yaml'
                 sh 'cat twdeploy.yaml'
                 sh 'kubectl apply -f twdeploy.yaml'
               }
@@ -149,10 +149,10 @@ pipeline {
     namespace = 'default'
     namespaceTest = 'twtest'
     namespaceProd = 'twprod'
-    nameDev = 'demo'
+    name = 'demo'
     nameTest = 'demo-test'
     nameProd = 'demo-prod'
-    portDev = '30081'
+    port = '30081'
     portTest = '30082'
     portProd = '30083'
   }
