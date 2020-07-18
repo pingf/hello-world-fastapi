@@ -12,7 +12,14 @@ pipeline {
         script {
           dockerImage = docker.build registry + "/" + imageName + ":$BUILD_NUMBER"
         }
+      }
+    }
 
+    stage('Run Test in Docker') {
+      steps {
+        script {
+          sh "docker run --rm " + registry + "/" + imageName + ":$BUILD_NUMBER pytest -v"
+        }
       }
     }
 
@@ -23,7 +30,14 @@ pipeline {
             dockerImage.push()
           }
         }
+      }
+    }
 
+    stage('Clean Local Image') {
+      steps {
+        script {
+          sh "docker rmi " + registry + "/" + imageName + ":$BUILD_NUMBER"
+        }
       }
     }
 
